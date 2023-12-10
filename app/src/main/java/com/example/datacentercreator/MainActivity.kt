@@ -63,7 +63,8 @@ class MainActivity : ComponentActivity() {
                     var filterText by remember {
                         mutableStateOf<String?>(null)
                     }
-                    val components by viewModel.componentUiState.collectAsState()
+                    val components by viewModel.componentsUiState.collectAsState()
+                    val component by viewModel.componentUiState.collectAsState()
                     val keyboard = LocalSoftwareKeyboardController.current
                     var tempValue by remember {
                         mutableStateOf("")
@@ -86,7 +87,11 @@ class MainActivity : ComponentActivity() {
                     LaunchedEffect(filterText) {
                         viewModel.getAllComponents(filterText)
                     }
-                    ComponentsScreen(components = components)
+                    if (component != null) {
+                        ComponentCard(component = component!!)
+                    } else {
+                        ComponentsScreen(components = components)
+                    }
                 }
             }
         }
@@ -111,7 +116,8 @@ fun GreetingPreview() {
 
 @Composable
 fun ComponentCard(
-    component: Component
+    component: Component,
+    onFullScreen: Boolean = false
 ) {
     Card(
         modifier = Modifier
@@ -134,8 +140,6 @@ fun ComponentCard(
                     .clip(
                         RoundedCornerShape(35.dp)
                     )
-
-
             )
             Text(
                 text = component.name,
@@ -153,8 +157,8 @@ fun ComponentCard(
             Text(
                 text = component.price.toString(),
                 style = TextStyle(
-                    fontSize = 16.sp,
-                    lineHeight = 20.sp,
+                    fontSize = 20.sp,
+                    lineHeight = 24.sp,
                     fontFamily = FontFamily(Font(R.font.roboto_regular)),
                     fontWeight = FontWeight(500),
                     color = Color(0xFF000000),
@@ -162,11 +166,21 @@ fun ComponentCard(
                 ),
                 modifier = Modifier.padding(top = 4.dp, start = 16.dp)
             )
-//            for (i in place.filters){
-//                FilterRow(filterText = i.key, filterValue = i.value)
-//            }
+            if (onFullScreen) {
+                Text(
+                    text = component.description.toString(),
+                    style = TextStyle(
+                        fontSize = 16.sp,
+                        lineHeight = 20.sp,
+                        fontFamily = FontFamily(Font(R.font.roboto_regular)),
+                        fontWeight = FontWeight(500),
+                        color = Color(0xFF000000),
+                        letterSpacing = 0.1.sp,
+                    ),
+                    modifier = Modifier.padding(top = 4.dp, start = 16.dp)
+                )
+            }
         }
-
     }
 }
 

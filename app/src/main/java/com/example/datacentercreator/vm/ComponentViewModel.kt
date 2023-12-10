@@ -11,7 +11,9 @@ import kotlinx.coroutines.launch
 
 class ComponentViewModel(private val componentRepository: ComponentRepositoryImpl = ComponentRepositoryImpl()) :
     ViewModel() {
-    private val _componentUiState = MutableStateFlow(emptyList<Component>())
+    private val _componentsUiState = MutableStateFlow(emptyList<Component>())
+    val componentsUiState = _componentsUiState.asStateFlow()
+    private val _componentUiState = MutableStateFlow(listOf<Component?>(null).random())
     val componentUiState = _componentUiState.asStateFlow()
 
     fun getAllComponents(filterText: String? = null) {
@@ -20,7 +22,18 @@ class ComponentViewModel(private val componentRepository: ComponentRepositoryImp
         }) {
             componentRepository.getAllComponents(filterText)
                 .collect { components ->
-                    _componentUiState.value = components
+                    _componentsUiState.value = components
+                }
+        }
+    }
+
+    fun getComponent(id: String) {
+        viewModelScope.launch(CoroutineExceptionHandler { _, exception ->
+            println("CoroutineExceptionHandler got $exception")
+        }) {
+            componentRepository.getComponent(id)
+                .collect { component ->
+                    _componentUiState.value = component
                 }
         }
     }
@@ -31,7 +44,7 @@ class ComponentViewModel(private val componentRepository: ComponentRepositoryImp
         }) {
             componentRepository.postComponent(component)
                 .collect { components ->
-                    _componentUiState.value = components
+                    _componentsUiState.value = components
                 }
         }
     }

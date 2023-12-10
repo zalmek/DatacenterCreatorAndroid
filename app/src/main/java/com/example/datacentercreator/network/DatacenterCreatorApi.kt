@@ -7,12 +7,16 @@ import retrofit2.create
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface DatacenterCreatorApi {
 
     @GET("api/components")
     suspend fun getAllComponents(@Query("filterText") filterText: String?): List<Component>
+
+    @GET("api/components/{id}")
+    suspend fun getComponent(@Path("id") id: String): Component
 
     @POST("component")
     suspend fun postComponent(@Body component: Component): List<Component>

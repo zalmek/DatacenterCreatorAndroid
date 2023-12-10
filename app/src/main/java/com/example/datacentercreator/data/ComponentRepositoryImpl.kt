@@ -23,4 +23,12 @@ class ComponentRepositoryImpl : ComponentRepository {
             )
             awaitClose()
         }
+
+    override fun getComponent(id: String): Flow<Component> =
+        callbackFlow {
+            trySendBlocking(
+                DatacenterCreatorApi.api.getComponent(id)
+            )
+            awaitClose()
+        }
 }
