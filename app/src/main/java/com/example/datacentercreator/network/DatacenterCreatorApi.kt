@@ -13,7 +13,7 @@ import retrofit2.http.Query
 interface DatacenterCreatorApi {
 
     @GET("api/components")
-    suspend fun getAllComponents(@Query("filterText") filterText: String?): List<Component>
+    suspend fun getAllComponents(@Query("filterText") filterText: String? = null): List<Component>
 
     @GET("api/components/{id}")
     suspend fun getComponent(@Path("id") id: String): Component
@@ -22,7 +22,7 @@ interface DatacenterCreatorApi {
     suspend fun postComponent(@Body component: Component): List<Component>
 
     companion object RetrofitBuilder {
-        private const val BASE_URL = "https://127.0.0.1:8000/"
+        private const val BASE_URL = "http://192.168.2.102:8000/"
 
         private fun getRetrofit(): Retrofit {
             return Retrofit.Builder()

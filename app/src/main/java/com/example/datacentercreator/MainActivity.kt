@@ -5,6 +5,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -90,7 +92,7 @@ class MainActivity : ComponentActivity() {
                     if (component != null) {
                         ComponentCard(component = component!!)
                     } else {
-                        ComponentsScreen(components = components)
+                        ComponentsScreen(components = components, viewModel::getComponent)
                     }
                 }
             }
@@ -117,7 +119,8 @@ fun GreetingPreview() {
 @Composable
 fun ComponentCard(
     component: Component,
-    onFullScreen: Boolean = false
+    onFullScreen: Boolean = false,
+    modifier: Modifier = Modifier
 ) {
     Card(
         modifier = Modifier
@@ -186,11 +189,18 @@ fun ComponentCard(
 
 @Composable
 fun ComponentsScreen(
-    components: List<Component>
+    components: List<Component>,
+    onClick: (String) -> Unit
 ) {
     LazyColumn {
         items(components) {
-            ComponentCard(component = it)
+            ComponentCard(
+                component = it, modifier = Modifier.clickable(
+                    interactionSource = MutableInteractionSource(),
+                    indication = null,
+                    onClick = { onClick(it.id.toString()) },
+                )
+            )
         }
     }
 }

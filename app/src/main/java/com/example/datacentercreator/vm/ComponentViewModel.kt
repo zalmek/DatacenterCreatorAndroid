@@ -18,7 +18,7 @@ class ComponentViewModel(private val componentRepository: ComponentRepositoryImp
 
     fun getAllComponents(filterText: String? = null) {
         viewModelScope.launch(CoroutineExceptionHandler { _, exception ->
-            println("CoroutineExceptionHandler got $exception")
+            println("CoroutineExceptionHandler got ${exception.printStackTrace()}}")
         }) {
             componentRepository.getAllComponents(filterText)
                 .collect { components ->
